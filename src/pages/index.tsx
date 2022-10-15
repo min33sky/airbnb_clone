@@ -1,5 +1,6 @@
+import MediumCard from '@/components/MediumCard';
 import SmallCard from '@/components/SmallCard';
-import { getNearbyLocation } from '@/lib/api';
+import { getCardsData, getNearbyLocation } from '@/lib/api';
 import { queryKeys } from '@/lib/constants';
 import getQueryClient from '@/lib/queryClient';
 import { dehydrate, useQuery } from '@tanstack/react-query';
@@ -8,8 +9,20 @@ import Banner from '../components/Banner';
 import Header from '../components/Header';
 
 export default function Home() {
-  const { data: exploreData } = useQuery([queryKeys.exploreNearBy], () =>
-    getNearbyLocation(),
+  const { data: exploreData } = useQuery(
+    [queryKeys.exploreNearBy],
+    () => getNearbyLocation(),
+    {
+      retry: false,
+    },
+  );
+
+  const { data: cardsData } = useQuery(
+    [queryKeys.liveAnywhere],
+    () => getCardsData(),
+    {
+      retry: false,
+    },
   );
 
   return (
@@ -32,6 +45,16 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        <section>
+          <h2 className="py-8 text-4xl font-semibold">Live Anywhere</h2>
+
+          <div className="-m-3 flex snap-x snap-mandatory space-x-3 overflow-x-scroll p-3 scrollbar-thin scrollbar-thumb-rose-300">
+            {cardsData?.map((item, idx) => (
+              <MediumCard key={idx} {...item} />
+            ))}
+          </div>
+        </section>
       </main>
     </div>
   );
@@ -42,6 +65,10 @@ export async function getServerSideProps() {
 
   await queryClient.prefetchQuery([queryKeys.exploreNearBy], () =>
     getNearbyLocation(),
+  );
+
+  await queryClient.prefetchQuery([queryKeys.liveAnywhere], () =>
+    getCardsData(),
   );
 
   return {
