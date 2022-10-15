@@ -1,3 +1,5 @@
+import Footer from '@/components/Footer';
+import LargeCard from '@/components/LargeCard';
 import MediumCard from '@/components/MediumCard';
 import SmallCard from '@/components/SmallCard';
 import { getCardsData, getNearbyLocation } from '@/lib/api';
@@ -55,7 +57,16 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        <LargeCard
+          img="/assets/Large_Image.webp"
+          title="The Greatest Outdoor"
+          description="Wishlists curated by Airbnb."
+          buttonText="Get Inspired"
+        />
       </main>
+
+      <Footer />
     </div>
   );
 }
