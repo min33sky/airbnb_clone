@@ -8,11 +8,18 @@ import {
 } from '@heroicons/react/24/outline';
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
-import { Calendar, DateRangePicker } from 'react-date-range';
+import { DateRangePicker } from 'react-date-range';
 import korean from 'date-fns/locale/ko';
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
-export default function Header() {
+interface Props {
+  placeholder?: string;
+}
+
+export default function Header({ placeholder }: Props) {
+  const router = useRouter();
   const [searchInput, setSearchInput] = useState('');
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -29,6 +36,19 @@ export default function Header() {
     key: 'selection',
   };
 
+  const search = () => {
+    router.push({
+      pathname: '/search',
+      query: {
+        location: searchInput,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        noOfGuests,
+      },
+    });
+    resetInput();
+  };
+
   const resetInput = () => {
     setSearchInput('');
   };
@@ -36,20 +56,24 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 grid grid-cols-3 bg-white p-5 shadow-md md:px-10">
       <div className="relative my-auto flex h-10 cursor-pointer items-center">
-        <Image
-          src="/assets/Airbnb_Logo.png"
-          layout="fill"
-          objectFit="contain"
-          objectPosition="left"
-          alt="Logo"
-        />
+        <Link href={'/'}>
+          <a>
+            <Image
+              src="/assets/Airbnb_Logo.png"
+              layout="fill"
+              objectFit="contain"
+              objectPosition="left"
+              alt="Logo"
+            />
+          </a>
+        </Link>
       </div>
 
       <div className="flex items-center rounded-full border-2 py-2 md:shadow-sm">
         <input
           type="text"
-          className="flex-grow bg-transparent pl-5 text-sm text-gray-600 placeholder-gray-400 outline-none"
-          placeholder="Start your search"
+          className="w-full flex-grow bg-transparent pl-5 text-sm text-gray-600 placeholder-gray-400 outline-none "
+          placeholder={placeholder ?? 'Start your search'}
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
         />
@@ -93,7 +117,9 @@ export default function Header() {
             <button onClick={resetInput} className="flex-grow text-gray-500">
               Cancel
             </button>
-            <button className="flex-grow text-red-500">Search</button>
+            <button onClick={search} className="flex-grow text-red-500">
+              Search
+            </button>
           </div>
         </div>
       )}
