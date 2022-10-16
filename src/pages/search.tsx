@@ -8,6 +8,7 @@ import { queryKeys } from '@/lib/constants';
 import { getSearchResult } from '@/lib/api';
 import { dehydrate, useQuery } from '@tanstack/react-query';
 import InfoCard from '@/components/InfoCard';
+import Map from '../components/Map';
 
 export default function SearchPage() {
   const router = useRouter();
@@ -63,6 +64,10 @@ export default function SearchPage() {
               <InfoCard key={idx} {...item} />
             ))}
           </div>
+        </section>
+
+        <section className="hidden lg:inline-flex lg:min-w-[600px]">
+          <Map searchResults={searchResult} />
         </section>
       </main>
     </div>

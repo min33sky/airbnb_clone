@@ -4,6 +4,16 @@ import { Hydrate, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import getQueryClient from '@/lib/queryClient';
 
+import Router from 'next/router';
+
+Router.events.on('routeChangeStart', (e) => {
+  console.log('start: ', e);
+});
+
+Router.events.on('routeChangeComplete', (e) => {
+  console.log('end: ', e);
+});
+
 function MyApp({
   Component,
   pageProps: { dehydratedState, ...pageProps },
