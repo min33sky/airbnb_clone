@@ -2,11 +2,13 @@ import Footer from '@/components/Footer';
 import LargeCard from '@/components/LargeCard';
 import MediumCard from '@/components/MediumCard';
 import SmallCard from '@/components/SmallCard';
+import useDragScroll from '@/hooks/useDragScroll';
 import { getCardsData, getNearbyLocation } from '@/lib/api';
 import { queryKeys } from '@/lib/constants';
 import getQueryClient from '@/lib/queryClient';
 import { dehydrate, useQuery } from '@tanstack/react-query';
 import Head from 'next/head';
+import { useRef } from 'react';
 import Banner from '../components/Banner';
 import Header from '../components/Header';
 
@@ -26,6 +28,9 @@ export default function Home() {
       retry: false,
     },
   );
+
+  const tempRef = useRef<HTMLDivElement>(null);
+  useDragScroll(tempRef);
 
   return (
     <div>
@@ -51,7 +56,10 @@ export default function Home() {
         <section>
           <h2 className="py-8 text-4xl font-semibold">Live Anywhere</h2>
 
-          <div className="-m-3 flex snap-x snap-mandatory space-x-3 overflow-x-scroll p-3 scrollbar-thin scrollbar-thumb-rose-300">
+          <div
+            ref={tempRef}
+            className="-m-3 flex space-x-3 overflow-x-scroll p-3 scrollbar-thin scrollbar-thumb-rose-300"
+          >
             {cardsData?.map((item, idx) => (
               <MediumCard key={idx} {...item} />
             ))}
